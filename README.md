@@ -1,49 +1,11 @@
-﻿# TP2 - Computação Gráfica
+﻿# TP2 - Diorama
 
-Estrutura inicial para o diorama, seguindo a [Sprint 0 no Notion](https://app.notion.com/p/3f98227f9c5c811f87e6e3a11550defe).
+HTML, CSS, JavaScript e TWGL.js (requer internet).
 
-HTML, CSS e JavaScript puro, sem framework e sem etapa de build.
-Usamos [TWGL.js](https://twgljs.org/) como biblioteca auxiliar para WebGL.
-A biblioteca é carregada pelo site oficial, por isso é necessário acesso à internet.
+Execute `python -m http.server 8000` e abra http://localhost:8000.
 
-## Executar localmente
+Base circular, hemisfério e três primitivas de teste, sem iluminação.
+Centro: (0, 0, 0). Chão: Y = 0. Y aponta para cima. Escala: 1 unidade.
 
-Na pasta do projeto, execute:
-
-```sh
-python -m http.server 8000
-```
-
-Abra http://localhost:8000 no navegador. Para encerrar o servidor, pressione Ctrl+C.
-Se preferir, use a extensão Live Server do VS Code para abrir index.html.
-Use um servidor local, pois o JavaScript usa módulos (import/export).
-
-## Estrutura
-
-```text
-index.html          Página e canvas
-style.css           Estilos básicos
-src/main.js         Inicialização do WebGL e loop de desenho
-src/scene.js        Configuração da cena e cor de fundo
-src/camera.js       Espaço para a câmera da próxima etapa
-src/shaders/        Espaço para os shaders GLSL
-assets/             Espaço para imagens, texturas e modelos
-```
-
-## Estado inicial
-
-- Canvas com fundo azul claro e mensagem de inicialização.
-- WebGL, TWGL.js, teste de profundidade e redimensionamento configurados.
-- Loop de desenho com requestAnimationFrame.
-
-Para conferir, abra a página e verifique o fundo azul, a mensagem "WebGL pronto"
-e a ausência de erros no console do navegador (F12). Redimensione a janela para
-conferir que o canvas se ajusta à largura disponível.
-
-## Próximo passo
-
-Implementar a câmera perspectiva e as primeiras geometrias do diorama.
-O centro da cena será a origem (0, 0, 0), com o chão em Y = 0 e o eixo Y
-apontando para cima. Vamos usar 1 unidade como referência de escala.
-Câmeras interativas, iluminação e animação serão adicionadas gradualmente.
-
+Edite posição, rotação (radianos), escala e cor em `src/scene.js`.
+Remova as três linhas de teste para deixar apenas a base.
