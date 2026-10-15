@@ -7,13 +7,18 @@
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <h1>TP2 - Computação Gráfica</h1>
-  <p>Base inicial do diorama</p>
   <canvas id="canvas" width="800" height="500" aria-label="Cena do diorama"></canvas>
-  <p id="status" role="status">Carregando WebGL...</p>
+
+  <!-- Menu sobre a cena, sem alterar o tamanho do canvas. -->
+  <aside id="menu" aria-label="Controles do diorama">
+    <h1>TP2 - Diorama</h1>
+    <p><kbd>L</kbd> Ligar/desligar iluminação</p>
+    <button id="toggle-light" type="button" aria-pressed="true" disabled>Desligar iluminação</button>
+    <p id="status" role="status">Carregando WebGL...</p>
+  </aside>
+
   <!-- TWGL auxilia as chamadas do WebGL. -->
   <script src="https://twgljs.org/dist/7.x/twgl-full.min.js"></script>
   <script type="module" src="src/main.js"></script>
 </body>
 </html>
-

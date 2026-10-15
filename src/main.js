@@ -4,6 +4,7 @@ import { vertexShader, fragmentShader } from './shaders/basic.js';
 
 const canvas = document.querySelector('#canvas');
 const status = document.querySelector('#status');
+const lightButton = document.querySelector('#toggle-light');
 const gl = canvas.getContext('webgl');
 const twgl = window.twgl;
 let programInfo;
@@ -20,12 +21,39 @@ if (!gl) {
   } else {
     geometries = createGeometries(gl);
     gl.enable(gl.DEPTH_TEST);
-    status.textContent = 'Base do diorama com cubo, esfera e cilindro de teste.';
+    lightButton.disabled = false;
+    lightButton.addEventListener('click', toggleLighting);
+    window.addEventListener('keydown', (event) => {
+      // Ignora repetição ao segurar a tecla.
+      if (event.key.toLowerCase() === 'l' && !event.repeat) {
+        toggleLighting();
+      }
+    });
     requestAnimationFrame(render);
   }
 }
 
+function toggleLighting() {
+  scene.lightingEnabled = !scene.lightingEnabled;
+}
+
 function render() {
+  update();
+  draw();
+  requestAnimationFrame(render);
+}
+
+function update() {
+  // Atualiza o menu apenas quando o estado muda.
+  const pressed = String(scene.lightingEnabled);
+  if (lightButton.getAttribute('aria-pressed') !== pressed || status.textContent === 'Carregando WebGL...') {
+    lightButton.setAttribute('aria-pressed', pressed);
+    lightButton.textContent = scene.lightingEnabled ? 'Desligar iluminação' : 'Ligar iluminação';
+    status.textContent = 'Iluminação ' + (scene.lightingEnabled ? 'ligada' : 'desligada') + '.';
+  }
+}
+
+function draw() {
   // Ajusta a resolução ao tamanho exibido do canvas.
   twgl.resizeCanvasToDisplaySize(canvas);
   gl.viewport(0, 0, canvas.width, canvas.height);
@@ -48,9 +76,17 @@ function render() {
     twgl.setBuffersAndAttributes(gl, programInfo, geometry);
     twgl.setUniforms(programInfo, {
       u_matrix: m4.multiply(viewProjection, world),
-      u_color: object.color,
+      // Inversa transposta mantém as normais corretas após mudar a escala.
+      u_normalMatrix: m4.transpose(m4.inverse(world)),
+      u_color: scene.materials[object.material].color,
+      u_lightDirection: scene.light.direction,
+      u_ambient: scene.light.ambient,
+      u_lightingEnabled: scene.lightingEnabled,
     });
     twgl.drawBufferInfo(gl, geometry);
   }
-  requestAnimationFrame(render);
+
 }
+
+
+

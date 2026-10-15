@@ -1,12 +1,22 @@
 ﻿export const scene = {
   backgroundColor: [0.65, 0.8, 0.9, 1],
+  lightingEnabled: true,
+  // Direção da superfície para a luz, em coordenadas da cena.
+  light: { direction: [1, 2, 3], ambient: 0.25 },
+  materials: {
+    ground: { color: [0.45, 0.7, 0.4, 1] },
+    base: { color: [0.5, 0.35, 0.2, 1] },
+    red: { color: [0.8, 0.3, 0.3, 1] },
+    blue: { color: [0.3, 0.4, 0.8, 1] },
+    yellow: { color: [0.85, 0.7, 0.2, 1] },
+  },
   objects: [
-    { geometry: 'ground', color: [0.45, 0.7, 0.4, 1], position: [0, 0, 0], rotation: [0, 0, 0], scale: [1, 1, 1] },
-    { geometry: 'base', color: [0.5, 0.35, 0.2, 1], position: [0, 0, 0], rotation: [0, 0, 0], scale: [1, 1, 1] },
+    { geometry: 'ground', material: 'ground', position: [0, 0, 0], rotation: [0, 0, 0], scale: [1, 1, 1] },
+    { geometry: 'base', material: 'base', position: [0, 0, 0], rotation: [0, 0, 0], scale: [1, 1, 1] },
     // Testes temporários: remova estas linhas para deixar a base vazia.
-    { geometry: 'cube', color: [0.8, 0.3, 0.3, 1], position: [-1.7, 0.5, 0], rotation: [0, 0.3, 0], scale: [1, 1, 1] },
-    { geometry: 'sphere', color: [0.3, 0.4, 0.8, 1], position: [0, 0.6, 2], rotation: [0, 0, 0], scale: [1, 1, 1] },
-    { geometry: 'cylinder', color: [0.85, 0.7, 0.2, 1], position: [1.7, 0.6, 0], rotation: [0, 0, 0], scale: [1, 1, 1] },
+    { geometry: 'cube', material: 'red', position: [-1.7, 0.5, 0], rotation: [0, 0.3, 0], scale: [1, 1, 1] },
+    { geometry: 'sphere', material: 'blue', position: [0, 0.6, 2], rotation: [0, 0, 0], scale: [1, 1, 1] },
+    { geometry: 'cylinder', material: 'yellow', position: [1.7, 0.6, 0], rotation: [0, 0, 0], scale: [1, 1, 1] },
   ],
 };
 
@@ -21,3 +31,4 @@ export function createGeometries(gl) {
     cylinder: primitives.createCylinderBufferInfo(gl, 0.5, 1.2, 24, 1),
   };
 }
+

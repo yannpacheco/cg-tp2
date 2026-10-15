@@ -1,3 +1,3 @@
 ﻿# Shaders
 
-basic.js contém os shaders de posição e cor, ainda sem iluminação.
+basic.js: posição, normais, cor e iluminação ambiente + difusa (Lambert).
