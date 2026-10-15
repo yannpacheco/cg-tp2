@@ -11,3 +11,4 @@ Edite posição, rotação (radianos), escala e material em `src/scene.js`.
 Remova as três linhas de teste para deixar apenas a base.
 
 Câmeras: 1 = giro automático + scroll; 2 = orbital ao arrastar o mouse.
+Teste de hierarquia: haste fixa e hélice giratória. Use addObject(config) em src/scene.js para adicionar objetos; children define partes filhas.

@@ -32,3 +32,47 @@ export function createGeometries(gl) {
   };
 }
 
+
+// Valores locais: os filhos acompanham a transformação do pai.
+export function addObject(config, parent = null) {
+  const object = {
+    position: [0, 0, 0],
+    rotation: [0, 0, 0],
+    scale: [1, 1, 1],
+    ...config,
+    children: [],
+  };
+  if (parent) parent.children.push(object);
+  else scene.objects.push(object);
+  for (const child of config.children || []) addObject(child, object);
+  return object;
+}
+
+export function updateScene(deltaTime) {
+  function updateObject(object) {
+    if (object.spin) {
+      for (let axis = 0; axis < 3; axis++) {
+        object.rotation[axis] = (object.rotation[axis] + object.spin[axis] * deltaTime) % (Math.PI * 2);
+      }
+    }
+    for (const child of object.children || []) updateObject(child);
+  }
+  for (const object of scene.objects) updateObject(object);
+}
+
+// Teste removível de hierarquia: suporte fixo e hélice móvel.
+addObject({
+  position: [0, 0, -1.8],
+  children: [
+    { geometry: 'cylinder', material: 'base', position: [0, 1, 0], scale: [0.3, 2 / 1.2, 0.3] },
+    {
+      position: [0, 2, 0.2],
+      spin: [0, 0, 2], // Velocidade em radianos por segundo.
+      children: [
+        { geometry: 'cube', material: 'yellow', scale: [2, 0.15, 0.15] },
+        { geometry: 'cube', material: 'yellow', scale: [0.15, 2, 0.15] },
+        { geometry: 'sphere', material: 'red', scale: [0.3, 0.3, 0.3] },
+      ],
+    },
+  ],
+});

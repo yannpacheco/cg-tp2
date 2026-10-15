@@ -1,4 +1,4 @@
-﻿import { scene, createGeometries } from './scene.js';
+﻿import { scene, createGeometries, updateScene } from './scene.js';
 import { camera, getViewProjection, setupCameraControls, updateCamera } from './camera.js';
 import { vertexShader, fragmentShader } from './shaders/basic.js';
 
@@ -51,6 +51,7 @@ function render(time) {
 
 function update(deltaTime) {
   updateCamera(deltaTime);
+  updateScene(deltaTime);
   const cameraText = camera.mode === 1 ? 'Câmera 1: giro automático' : 'Câmera 2: orbital';
   if (cameraStatus.textContent !== cameraText) cameraStatus.textContent = cameraText;
   // Atualiza o menu apenas quando o estado muda.
@@ -74,18 +75,26 @@ function draw() {
   const viewProjection = getViewProjection(gl);
 
   for (const object of scene.objects) {
-    // Escala e rotação locais, seguidas pela posição na cena.
-    let world = m4.translation(object.position);
-    world = m4.rotateX(world, object.rotation[0]);
-    world = m4.rotateY(world, object.rotation[1]);
-    world = m4.rotateZ(world, object.rotation[2]);
-    world = m4.scale(world, object.scale);
+    drawObject(object, m4.identity(), viewProjection);
+  }
+}
 
+function drawObject(object, parentWorld, viewProjection) {
+  const m4 = twgl.m4;
+  let local = m4.translation(object.position);
+  local = m4.rotateX(local, object.rotation[0]);
+  local = m4.rotateY(local, object.rotation[1]);
+  local = m4.rotateZ(local, object.rotation[2]);
+  local = m4.scale(local, object.scale);
+  // A matriz do pai posiciona o objeto inteiro na cena.
+  const world = m4.multiply(parentWorld, local);
+
+  // Grupos podem ter filhos sem possuir geometria própria.
+  if (object.geometry) {
     const geometry = geometries[object.geometry];
     twgl.setBuffersAndAttributes(gl, programInfo, geometry);
     twgl.setUniforms(programInfo, {
       u_matrix: m4.multiply(viewProjection, world),
-      // Inversa transposta mantém as normais corretas após mudar a escala.
       u_normalMatrix: m4.transpose(m4.inverse(world)),
       u_color: scene.materials[object.material].color,
       u_lightDirection: scene.light.direction,
@@ -94,9 +103,7 @@ function draw() {
     });
     twgl.drawBufferInfo(gl, geometry);
   }
-
+  for (const child of object.children || []) {
+    drawObject(child, world, viewProjection);
+  }
 }
-
-
-
-
