@@ -12,6 +12,9 @@
   <!-- Menu sobre a cena, sem alterar o tamanho do canvas. -->
   <aside id="menu" aria-label="Controles do diorama">
     <h1>TP2 - Diorama</h1>
+    <p><kbd>1</kbd> Giro automático · scroll para zoom</p>
+    <p><kbd>2</kbd> Orbital · arraste o mouse para girar</p>
+    <p id="camera-status" role="status">Câmera 1: giro automático</p>
     <p><kbd>L</kbd> Ligar/desligar iluminação</p>
     <button id="toggle-light" type="button" aria-pressed="true" disabled>Desligar iluminação</button>
     <p id="status" role="status">Carregando WebGL...</p>
@@ -22,3 +25,4 @@
   <script type="module" src="src/main.js"></script>
 </body>
 </html>
+

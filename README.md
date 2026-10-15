@@ -10,3 +10,4 @@ Centro: (0, 0, 0). Chão: Y = 0. Y aponta para cima. Escala: 1 unidade.
 Edite posição, rotação (radianos), escala e material em `src/scene.js`.
 Remova as três linhas de teste para deixar apenas a base.
 
+Câmeras: 1 = giro automático + scroll; 2 = orbital ao arrastar o mouse.

@@ -1,14 +1,16 @@
 ﻿import { scene, createGeometries } from './scene.js';
-import { getViewProjection } from './camera.js';
+import { camera, getViewProjection, setupCameraControls, updateCamera } from './camera.js';
 import { vertexShader, fragmentShader } from './shaders/basic.js';
 
 const canvas = document.querySelector('#canvas');
 const status = document.querySelector('#status');
 const lightButton = document.querySelector('#toggle-light');
+const cameraStatus = document.querySelector('#camera-status');
 const gl = canvas.getContext('webgl');
 const twgl = window.twgl;
 let programInfo;
 let geometries;
+let previousTime = null;
 
 if (!gl) {
   status.textContent = 'WebGL indisponível. Tente outro navegador com suporte a WebGL.';
@@ -21,6 +23,7 @@ if (!gl) {
   } else {
     geometries = createGeometries(gl);
     gl.enable(gl.DEPTH_TEST);
+    setupCameraControls(canvas);
     lightButton.disabled = false;
     lightButton.addEventListener('click', toggleLighting);
     window.addEventListener('keydown', (event) => {
@@ -37,13 +40,19 @@ function toggleLighting() {
   scene.lightingEnabled = !scene.lightingEnabled;
 }
 
-function render() {
-  update();
+function render(time) {
+  // Limita o salto ao voltar de uma aba inativa.
+  const deltaTime = previousTime === null ? 0 : Math.min((time - previousTime) / 1000, 0.1);
+  previousTime = time;
+  update(deltaTime);
   draw();
   requestAnimationFrame(render);
 }
 
-function update() {
+function update(deltaTime) {
+  updateCamera(deltaTime);
+  const cameraText = camera.mode === 1 ? 'Câmera 1: giro automático' : 'Câmera 2: orbital';
+  if (cameraStatus.textContent !== cameraText) cameraStatus.textContent = cameraText;
   // Atualiza o menu apenas quando o estado muda.
   const pressed = String(scene.lightingEnabled);
   if (lightButton.getAttribute('aria-pressed') !== pressed || status.textContent === 'Carregando WebGL...') {
@@ -87,6 +96,7 @@ function draw() {
   }
 
 }
+
 
 
 
