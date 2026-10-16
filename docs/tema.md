@@ -1,36 +1,24 @@
-﻿# Ilha do Contrabando — direção inicial
+﻿# Ilha do Contrabando
 
-Uma pequena ilha tropical esconde um antigo fortim usado por piratas para guardar seus saques.
-Um barco encalhado marca a chegada à praia; o centro livre receberá o personagem e o tesouro.
+Pequeno esconderijo pirata com fortim e praia de desembarque.
+Estilo low-poly com paleta original do Kenney Pirate Kit, areia clara e céu azul.
+Referências visuais: assets/preview/. Licença CC0 em assets/License-Kenney.txt.
 
-Estilo: low-poly, cores chapadas e luz de dia. Referências: as prévias Kenney em assets/preview,
-fortins costeiros e praias tropicais. Sem texturas nesta primeira versão.
+Planta atual (X,Z), chão Y = 0 e raio 4:
 
-Paleta: areia #E0C280, pedra #7A808C, madeira #7A401F, céu #A6CCE6.
-Vegetação futura: verde #497344; detalhes futuros: vermelho e dourado.
+| Elemento | Local |
+| --- | --- |
+| Fortim baixo com ameias | (-1.4, -1.4) |
+| Canhão em pedestal fixo | (1.85, -1.65) |
+| Cais e barco | (2.1, 0.35) e (2.1, 1.9) |
+| Palmeiras | (-2.5, 0.5) e (0.6, -2.65) |
+| Baú | (-0.9, 0.2) |
+| Barril e caixa | (-2.3, -0.65) e (-0.1, -1.25) |
+| Rochas | (-1.6, 2.1) |
+| Personagens futuros | Centro e faixa frontal livres |
 
-## Planta inicial (vista de cima, raio 4)
+O canhão substitui a hélice: grupo com pedestal fixo e parte superior que gira
+no eixo Y (0.35 rad/s). OBJ fornecem a aparência; TWGL fornece pedestal e base.
+As duas peças do fortim são um tipo de objeto, não dois tipos distintos.
 
-```text
-                    -Z (fundo)
-               .----------------.
-             / Fortim   Hélice    \
-            | (-1.3,-.8) (1.2,-1.5)|
-       -X   |                      |   +X
-            | Palmeiras* Pirata*   |
-            | (-2,1)     (0,.8)    |
-             \         Barco      /
-               '---(1.5,1.6)----'
-                    +Z (frente)
-```
-
-* Reservas para próximas etapas. Coordenadas no chão: (X, Z), Y = 0.
-Três tipos planejados: fortim, barco e palmeiras. As duas peças de torre contam como um tipo.
-Manter o centro livre e conferir o conjunto pelas duas câmeras.
-
-Importados: barco e duas peças de torre OBJ. Primitivas TWGL: chão, hemisfério,
-palmeiras/rochas futuras e personagem simples a definir. A haste/hélice continua
-como teste temporário; seu substituto temático será escolhido depois.
-
-Os modelos já estão colocados como primeiro teste, ainda sujeitos a ajustes visuais.
-Procedência e limitações: assets/README.md.
+Conferir visualmente o conjunto nas duas câmeras antes de fechar a etapa.

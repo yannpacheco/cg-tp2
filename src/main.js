@@ -1,4 +1,5 @@
-﻿import { scene, createGeometries, updateScene } from './scene.js';
+import { loadPalette } from './obj-loader.js';
+import { scene, createGeometries, updateScene } from './scene.js';
 import { camera, getViewProjection, setupCameraControls, updateCamera } from './camera.js';
 import { vertexShader, fragmentShader } from './shaders/basic.js';
 
@@ -10,6 +11,7 @@ const gl = canvas.getContext('webgl');
 const twgl = window.twgl;
 let programInfo;
 let geometries;
+let palette;
 let previousTime = null;
 
 if (!gl) {
@@ -24,6 +26,7 @@ if (!gl) {
     try {
       status.textContent = 'Carregando modelos...';
       geometries = await createGeometries(gl);
+      palette = await loadPalette(gl);
     } catch (error) {
       status.textContent = error.message;
       throw error;
@@ -103,6 +106,8 @@ function drawObject(object, parentWorld, viewProjection) {
       u_matrix: m4.multiply(viewProjection, world),
       u_normalMatrix: m4.transpose(m4.inverse(world)),
       u_color: scene.materials[object.material].color,
+      u_texture: palette,
+      u_useTexture: Boolean(scene.materials[object.material].textured),
       u_lightDirection: scene.light.direction,
       u_ambient: scene.light.ambient,
       u_lightingEnabled: scene.lightingEnabled,
