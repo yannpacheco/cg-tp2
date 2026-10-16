@@ -19,7 +19,10 @@ void main() {
 export const fragmentShader = `
 precision mediump float;
 uniform vec4 u_color;
+uniform vec3 u_tint;
+uniform float u_tintStrength;
 uniform sampler2D u_texture;
+uniform vec2 u_textureScale;
 uniform bool u_useTexture;
 varying vec2 v_texcoord;
 uniform vec3 u_lightDirection;
@@ -35,7 +38,9 @@ void main() {
     brightness = u_ambient + (1.0 - u_ambient) * diffuse;
   }
   vec4 color = u_color;
-  if (u_useTexture) color *= texture2D(u_texture, v_texcoord);
+  if (u_useTexture) color *= texture2D(u_texture, v_texcoord * u_textureScale);
+  // Clareia o material sem apagar completamente os detalhes.
+  color.rgb = mix(color.rgb, u_tint, u_tintStrength);
   gl_FragColor = vec4(color.rgb * brightness, color.a);
 }
 `;

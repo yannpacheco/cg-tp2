@@ -22,3 +22,8 @@ no eixo Y (0.35 rad/s). OBJ fornecem a aparência; TWGL fornece pedestal e base.
 As duas peças do fortim são um tipo de objeto, não dois tipos distintos.
 
 Conferir visualmente o conjunto nas duas câmeras antes de fechar a etapa.
+
+Etapa 2: rochas importadas substituídas por três esferas TWGL de poucas faces,
+com escalas diferentes e dois tons de cinza. Origem da esfera no centro;
+altura Y igual ao raio vertical mantém cada pedra apoiada no chão.
+Centro preservado para personagens. Iluminação e câmeras compartilhadas com os demais objetos.
