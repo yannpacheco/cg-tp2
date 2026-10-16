@@ -1,9 +1,9 @@
-﻿export const camera = {
+export const camera = {
   mode: 1,
-  target: [0, 0, 0],
+  target: [1, -0.5, 0],
   up: [0, 1, 0],
-  automatic: { angle: Math.PI / 4, elevation: Math.PI / 4, distance: 14 },
-  orbital: { angle: Math.PI / 4, elevation: Math.PI / 4, distance: 14 },
+  automatic: { angle: Math.PI / 4, elevation: Math.PI / 4, distance: 26 },
+  orbital: { angle: Math.PI / 4, elevation: Math.PI / 4, distance: 26 },
 };
 
 export function setupCameraControls(canvas) {
@@ -23,7 +23,7 @@ export function setupCameraControls(canvas) {
     event.preventDefault();
     // Limita o zoom para não entrar na base nem afastar demais.
     const distance = camera.automatic.distance * (event.deltaY > 0 ? 1.1 : event.deltaY < 0 ? 0.9 : 1);
-    camera.automatic.distance = Math.max(8, Math.min(30, distance));
+    camera.automatic.distance = Math.max(16, Math.min(40, distance));
   }, { passive: false });
 
   canvas.addEventListener('pointerdown', (event) => {
@@ -59,16 +59,20 @@ export function updateCamera(deltaTime) {
   if (camera.mode === 1) camera.automatic.angle += deltaTime * 0.3;
 }
 
-export function getViewProjection(gl) {
-  const m4 = window.twgl.m4;
+export function getCameraPosition() {
   const active = camera.mode === 1 ? camera.automatic : camera.orbital;
   // Coordenadas esféricas mantêm a câmera ao redor da origem.
   const horizontal = active.distance * Math.cos(active.elevation);
-  const position = [
+  return [
     horizontal * Math.sin(active.angle),
     active.distance * Math.sin(active.elevation),
     horizontal * Math.cos(active.angle),
   ];
+}
+
+export function getViewProjection(gl) {
+  const m4 = window.twgl.m4;
+  const position = getCameraPosition();
   const aspect = gl.canvas.width / gl.canvas.height;
   const projection = m4.perspective(Math.PI / 4, aspect, 0.1, 100);
   const view = m4.inverse(m4.lookAt(position, camera.target, camera.up));

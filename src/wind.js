@@ -1,4 +1,4 @@
-﻿// Vento leve: palmeiras oscilam e pequenos graos cruzam a ilha.
+// Vento leve: palmeiras oscilam e pequenos graos cruzam a ilha.
 export function setupWind(scene, addObject) {
   scene.wind = { enabled: true, direction: [0.96, 0, 0.28], speed: 0.55, time: 0, particles: [] };
   scene.materials.dust = { color: [0.92, 0.82, 0.6, 1], ambient: 0.8 };
@@ -8,16 +8,16 @@ export function setupWind(scene, addObject) {
 
   for (let i = 0; i < 28; i++) {
     const particle = addObject({ geometry: 'dust', material: 'dust', visible: true });
-    resetParticle(particle);
+    resetParticle(particle, scene.islandRadius);
     particle.age = Math.random() * particle.lifetime;
     scene.wind.particles.push(particle);
   }
 }
 
-function resetParticle(particle) {
+function resetParticle(particle, islandRadius) {
   // Nasce dentro do disco, perto do solo.
   const angle = Math.random() * Math.PI * 2;
-  const radius = Math.sqrt(Math.random()) * 3.2;
+  const radius = Math.sqrt(Math.random()) * (islandRadius - 0.8);
   particle.position = [Math.cos(angle) * radius, 0.08 + Math.random() * 0.35, Math.sin(angle) * radius];
   particle.age = 0;
   particle.lifetime = 3 + Math.random() * 3;
@@ -39,8 +39,8 @@ export function updateWind(scene, deltaTime) {
     particle.age += deltaTime;
     particle.position[0] += wind.direction[0] * wind.speed * deltaTime;
     particle.position[2] += wind.direction[2] * wind.speed * deltaTime;
-    if (particle.age >= particle.lifetime || Math.hypot(particle.position[0], particle.position[2]) > 3.7) {
-      resetParticle(particle);
+    if (particle.age >= particle.lifetime || Math.hypot(particle.position[0], particle.position[2]) > scene.islandRadius - 0.3) {
+      resetParticle(particle, scene.islandRadius);
     }
     // Encolhe nas pontas da vida para surgir e desaparecer suavemente.
     const size = Math.max(0.0001, particle.size * Math.sin(Math.PI * particle.age / particle.lifetime));

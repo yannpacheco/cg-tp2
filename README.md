@@ -1,13 +1,14 @@
 ﻿# TP2 - Ilha do Contrabando
 
-Ilha pirata low-poly: fortim, palmeiras, cais, barco e tesouro.
+Porto pirata low-poly com navio, casa, tesouro e capitão.
 HTML/CSS/JS + TWGL.js (internet).
 
 Execute `python -m http.server 8000` e abra http://localhost:8000.
-1 = câmera automática + scroll; 2 = arrastar para orbitar; L = luz.
+1 = câmera automática + scroll; 2 = arrastar; L = luz; V = vento; P = posição do capitão.
 
-Chão Y = 0; centro (0,0,0). Cena: src/scene.js.
-Hierarquia: pedestal fixo + canhão giratório. Centro livre para personagens.
-Assets: Kenney Pirate Kit 2.1, CC0. [Créditos](assets/README.md).
+Ilha: raio 5.5, chão Y = 0; mar: raio 8.5. Cena: src/scene.js.
+Hierarquia: pedestal fixo e canhão giratório. Personagem estático, três posições.
+Assets: Kenney e Quaternius. [Créditos](assets/README.md).
 
-V = vento: balanço leve nas palmeiras e pequenos grãos de poeira.
+Fundo panorâmico de céu ao entardecer, acompanhando as câmeras.
+O navio navega automaticamente ao redor da ilha (uma volta em cerca de 52 s).

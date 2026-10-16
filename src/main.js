@@ -1,13 +1,15 @@
-import { loadSand } from './textures.js';
+import { createSky, drawSky } from './sky.js';
+import { loadSand, loadPirateAtlas } from './textures.js';
 import { loadPalette } from './obj-loader.js';
-import { scene, createGeometries, updateScene } from './scene.js';
-import { camera, getViewProjection, setupCameraControls, updateCamera } from './camera.js';
+import { scene, createGeometries, updateScene, nextCharacterPose } from './scene.js';
+import { camera, getCameraPosition, getViewProjection, setupCameraControls, updateCamera } from './camera.js';
 import { vertexShader, fragmentShader } from './shaders/basic.js';
 
 const canvas = document.querySelector('#canvas');
 const status = document.querySelector('#status');
 const lightButton = document.querySelector('#toggle-light');
 const windButton = document.querySelector('#toggle-wind');
+const poseButton = document.querySelector('#next-pose');
 const cameraStatus = document.querySelector('#camera-status');
 const gl = canvas.getContext('webgl');
 const twgl = window.twgl;
@@ -15,6 +17,8 @@ let programInfo;
 let geometries;
 let palette;
 let sand;
+let pirateAtlas;
+let sky;
 let previousTime = null;
 
 if (!gl) {
@@ -31,6 +35,8 @@ if (!gl) {
       geometries = await createGeometries(gl);
       palette = await loadPalette(gl);
       sand = await loadSand(gl);
+      pirateAtlas = await loadPirateAtlas(gl);
+      sky = await createSky(gl);
     } catch (error) {
       status.textContent = error.message;
       throw error;
@@ -39,10 +45,13 @@ if (!gl) {
     setupCameraControls(canvas);
     lightButton.disabled = false;
     windButton.disabled = false;
+    poseButton.disabled = false;
+    poseButton.addEventListener('click', nextCharacterPose);
     windButton.addEventListener('click', toggleWind);
     lightButton.addEventListener('click', toggleLighting);
     window.addEventListener('keydown', (event) => {
       // Ignora repetição ao segurar a tecla.
+      if (event.key.toLowerCase() === 'p' && !event.repeat) nextCharacterPose();
       if (event.key.toLowerCase() === 'v' && !event.repeat) toggleWind();
       if (event.key.toLowerCase() === 'l' && !event.repeat) {
         toggleLighting();
@@ -72,6 +81,8 @@ function render(time) {
 function update(deltaTime) {
   updateCamera(deltaTime);
   updateScene(deltaTime);
+  const poseText = 'Posição do capitão: ' + (scene.characterPose + 1) + '/3 - trocar';
+  if (poseButton.textContent !== poseText) poseButton.textContent = poseText;
   const windPressed = String(scene.wind.enabled);
   if (windButton.getAttribute('aria-pressed') !== windPressed || windButton.textContent === 'Carregando vento...') {
     windButton.setAttribute('aria-pressed', windPressed);
@@ -94,10 +105,10 @@ function draw() {
   gl.viewport(0, 0, canvas.width, canvas.height);
   gl.clearColor(...scene.backgroundColor);
   gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
-  gl.useProgram(programInfo.program);
-
   const m4 = twgl.m4;
   const viewProjection = getViewProjection(gl);
+  drawSky(gl, sky, viewProjection, getCameraPosition());
+  gl.useProgram(programInfo.program);
 
   for (const object of scene.objects) {
     drawObject(object, m4.identity(), viewProjection);
@@ -129,7 +140,7 @@ function drawObject(object, parentWorld, viewProjection) {
       u_matrix: m4.multiply(viewProjection, world),
       u_normalMatrix: m4.transpose(m4.inverse(world)),
       u_color: material.color,
-      u_texture: material.texture === 'sand' ? sand : palette,
+      u_texture: material.texture === 'sand' ? sand : material.texture === 'pirate' ? pirateAtlas : palette,
       u_textureScale: material.textureScale || [1, 1],
       u_tint: material.tint || [1, 1, 1],
       u_tintStrength: material.tintStrength || 0,

@@ -1,29 +1,39 @@
-﻿# Ilha do Contrabando
+# Ilha do Contrabando — porto pirata
 
-Pequeno esconderijo pirata com fortim e praia de desembarque.
-Estilo low-poly com paleta original do Kenney Pirate Kit, areia clara e céu azul.
-Referências visuais: assets/preview/. Licença CC0 em assets/License-Kenney.txt.
+Casa de madeira ao fundo, tesouro e capitão no centro, navio de velas listradas
+junto ao cais à direita. Palmeiras nas laterais, rochas TWGL e canhão giratório.
+Referências visuais: assets/preview/quaternius/Preview.png e Preview2.png.
 
-Planta atual (X,Z), chão Y = 0 e raio 4:
+Ilha ampliada de raio 4 para 5.5; disco de mar simples de raio 8.5 em Y = -0.2.
+Hemisfério preservado sob a ilha, achatado na vertical. O mar é opaco e sem ondas.
+Câmeras afastadas para 24 unidades, zoom entre 16 e 40; alvo em (1, 0.7, 0).
+O limite da poeira acompanha o raio da ilha.
 
-| Elemento | Local |
+| Elemento | Posição (X, Z) |
 | --- | --- |
-| Fortim baixo com ameias | (-1.4, -1.4) |
-| Canhão em pedestal fixo | (1.85, -1.65) |
-| Cais e barco | (2.1, 0.35) e (2.1, 1.9) |
-| Palmeiras | (-2.5, 0.5) e (0.6, -2.65) |
-| Baú | (-0.9, 0.2) |
-| Barril e caixa | (-2.3, -0.65) e (-0.1, -1.25) |
-| Rochas | (-1.6, 2.1) |
-| Personagens futuros | Centro e faixa frontal livres |
+| Casa pirata | (-1.2, -2.2) |
+| Navio | (6.5, -0.6), no mar |
+| Cais | (4.65, 0), ligando a praia ao navio |
+| Palmeiras | (-3.7, 0.2) e (0.8, -3.8) |
+| Baú e ouro | (-1.1, 0.9), região central esquerda |
+| Barris | (-2.8, -0.9) e (-2.3, -0.75) |
+| Âncora | (3.7, 1.3) |
+| Canhão hierárquico | (2.3, -2.3) |
+| Rochas TWGL | região (-2.9, 2.5) |
 
-O canhão substitui a hélice: grupo com pedestal fixo e parte superior que gira
-no eixo Y (0.35 rad/s). OBJ fornecem a aparência; TWGL fornece pedestal e base.
-As duas peças do fortim são um tipo de objeto, não dois tipos distintos.
+Capitão Barbarossa estático, escala 0.9. Tecla P e botão alternam:
+1. Tesouro: (0.3, 1.1), orientação 0.
+2. Cais: (3.1, 0.2), orientação PI/2.
+3. Clareira diante da casa: (1.3, -0.3), orientação -PI/3.
 
-Conferir visualmente o conjunto nas duas câmeras antes de fechar a etapa.
+A altura 0.006 compensa o pequeno deslocamento dos pés no OBJ.
+Objetos Quaternius usam Atlas_Pirate.png; Kenney mantém sua paleta.
+Rochas, vento, areia clareada e hierarquia foram preservados.
 
-Etapa 2: rochas importadas substituídas por três esferas TWGL de poucas faces,
-com escalas diferentes e dois tons de cinza. Origem da esfera no centro;
-altura Y igual ao raio vertical mantém cada pedra apoiada no chão.
-Centro preservado para personagens. Iluminação e câmeras compartilhadas com os demais objetos.
+Base ampliada: hemisfério azul com raio igual ao mar (8.5), topo em Y = -0.2.
+Borda cilíndrica da ilha fecha os 0.2 de altura entre água e areia.
+Enquadramento do globo: distância inicial 26, alvo (1, -0.5, 0), escala vertical do hemisfério 0.85. Borda da areia sem tampas sobrepostas.
+
+Navio em órbita circular no mar: raio 6.8, velocidade 0.12 rad/s, altura 0.2.
+Proa acompanha a tangente. Percurso conferido com todos os vértices do OBJ
+para manter o casco fora da ilha e dentro do disco de mar.

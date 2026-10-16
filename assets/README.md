@@ -1,19 +1,29 @@
-﻿# Assets — Kenney Pirate Kit 2.1
+﻿# Assets
 
-Autor: Kenney (www.kenney.nl). Licença: CC0.
-Licença original copiada em License-Kenney.txt.
+## Kenney Pirate Kit 2.1 — CC0
 
-Modelos escolhidos: barco, peças de fortim, palmeiras, cais pequeno,
-baú, barril, caixa, rochas e canhão. OBJ/MTL em models/; prévias em preview/.
-Textura compartilhada: models/Textures/colormap.png.
+Palmeiras, caixa e canhão visíveis usam os OBJ em models/ e a paleta
+models/Textures/colormap.png. Licença original: License-Kenney.txt.
+Outros modelos Kenney permanecem como referência, mas não são mais carregados.
 
-O leitor usa posições, normais e UVs dos OBJ. Os MTL estão preservados como
-referência; a paleta compartilhada é configurada diretamente no código.
-O pedestal do canhão e a base do diorama usam primitivas TWGL.
+## Quaternius Pirate Kit — novembro de 2023
 
-Areia: Ground054_1K-JPG_Color.jpg, fornecida pelo integrante do projeto.
-Cópia local em textures/sand.jpg (1024 x 1024). Fonte/licença específica a registrar.
-Aplicada apenas ao chão, repetida 4 vezes em cada eixo; modelos mantêm a paleta Kenney.
+Navio com velas, capitão Barbarossa, casa, cais, baú aberto, barris, âncora,
+saco de ouro e moedas. OBJ/MTL e Atlas_Pirate.png em models/quaternius/.
+Prévias em preview/quaternius/. Créditos e fonte da licença CC0:
+[LICENSE-Quaternius.md](LICENSE-Quaternius.md).
 
-As rochas visíveis são primitivas TWGL criadas no projeto. rocks-a.obj e sua prévia
-ficam apenas como referência; esse OBJ não é mais carregado pela cena.
+O leitor usa posições, normais e UVs; os MTL são preservados como referência.
+Cada kit mantém sua própria textura, selecionada pelo material da cena.
+O personagem OBJ estático usa P para mudar de posição/orientação, sem esqueleto.
+
+## Areia e primitivas
+
+Ground054_1K-JPG_Color.jpg fornecida pelo integrante, copiada para textures/sand.jpg.
+Fonte/licença específica da areia a registrar. O material clareia a textura.
+Rochas, pedestal, chão, hemisfério, disco de mar e poeira usam primitivas TWGL.
+
+Fundo: EveningSkyHDRI021A_2K_TONEMAPPED.jpg fornecida pelo integrante, copiada
+para backgrounds/evening-sky.jpg. Usamos a metade superior (céu) em esfera
+centrada na câmera para excluir os molhes da fotografia. Não carrega EXR nem
+altera a iluminação dos objetos. Fonte/licença específica a registrar.

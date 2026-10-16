@@ -2,11 +2,15 @@ import { setupWind, updateWind } from './wind.js';
 import { loadOBJ } from './obj-loader.js';
 
 export const scene = {
+  islandRadius: 5.5,
+  seaRadius: 8.5,
   backgroundColor: [0.65, 0.8, 0.9, 1],
   lightingEnabled: true,
   // Direção da superfície para a luz, em coordenadas da cena.
   light: { direction: [1, 2, 3], ambient: 0.25 },
   materials: {
+    pirate: { color: [1, 1, 1, 1], textured: true, texture: 'pirate' },
+    water: { color: [0.16, 0.57, 0.72, 1], ambient: 0.7 },
     kit: { color: [1, 1, 1, 1], textured: true },
     ground: { color: [1, 1, 1, 1], textured: true, texture: 'sand', textureScale: [4, 4], tint: [1, 0.9, 0.68], tintStrength: 0.65, ambient: 0.65 },
     base: { color: [0.5, 0.35, 0.2, 1] },
@@ -18,38 +22,45 @@ export const scene = {
     yellow: { color: [0.85, 0.7, 0.2, 1] },
   },
   objects: [
+    { geometry: 'water', material: 'water', position: [0, -0.2, 0], rotation: [0, 0, 0], scale: [1, 1, 1] },
     { geometry: 'ground', material: 'ground', position: [0, 0, 0], rotation: [0, 0, 0], scale: [1, 1, 1] },
-    { geometry: 'base', material: 'base', position: [0, 0, 0], rotation: [0, 0, 0], scale: [1, 1, 1] },
-    // Fortim ao fundo; centro livre para os personagens.
-    { geometry: 'towerDoor', material: 'kit', position: [-1.4, 0, -1.4], rotation: [0, 0, 0], scale: [0.55, 0.55, 0.55] },
-    { geometry: 'towerTop', material: 'kit', position: [-1.4, 1.1, -1.4], rotation: [0, 0, 0], scale: [0.55, 0.55, 0.55] },
-    { geometry: 'dock', material: 'kit', position: [2.1, -0.42, 0.35], rotation: [0, 0, 0], scale: [0.6, 0.6, 0.6] },
-    { geometry: 'boat', material: 'kit', position: [2.1, 0, 1.9], rotation: [0, 0, 0], scale: [0.48, 0.48, 0.48] },
-    { geometry: 'palm', material: 'kit', position: [-2.5, 0, 0.5], rotation: [0, 2.4, 0], scale: [0.55, 0.55, 0.55] },
-    { geometry: 'palmStraight', material: 'kit', position: [0.6, 0, -2.65], rotation: [0, 0.5, 0], scale: [0.65, 0.65, 0.65] },
-    { geometry: 'chest', material: 'kit', position: [-0.9, 0, 0.2], rotation: [0, 0.3, 0], scale: [0.45, 0.45, 0.45] },
-    { geometry: 'barrel', material: 'kit', position: [-2.3, 0, -0.65], rotation: [0, 0, 0], scale: [0.35, 0.35, 0.35] },
+    // O hemisferio acompanha a borda do mar, formando uma base unica.
+    { geometry: 'base', material: 'water', position: [0, -0.2, 0], rotation: [0, 0, 0], scale: [1, 0.85, 1] },
+    { geometry: 'islandEdge', material: 'base', position: [0, -0.1, 0], rotation: [0, 0, 0], scale: [1, 1, 1] },
+    // Casa e tesouro a esquerda; o porto ocupa a borda direita.
+    { geometry: 'house', material: 'pirate', position: [-1.2, 0.014, -2.2], rotation: [0, 0, 0], scale: [0.38, 0.38, 0.38] },
+    { geometry: 'dock', material: 'pirate', position: [4.65, -0.1, 0], rotation: [0, 0, 0], scale: [0.85, 0.6, 0.65] },
+    { geometry: 'ship', material: 'pirate', position: [6.8, 0.2, 0], rotation: [0, Math.PI / 2, 0], scale: [0.36, 0.36, 0.36], orbit: { radius: 6.8, angle: 0, speed: 0.12 } },
+    { geometry: 'palm', material: 'kit', position: [-3.7, 0, 0.2], rotation: [0, 2.4, 0], scale: [0.65, 0.65, 0.65] },
+    { geometry: 'palmStraight', material: 'kit', position: [0.8, 0, -3.8], rotation: [0, 0.5, 0], scale: [0.75, 0.75, 0.75] },
+    { geometry: 'chest', material: 'pirate', position: [-1.1, 0.012, 0.9], rotation: [0, 0.3, 0], scale: [0.55, 0.55, 0.55] },
+    { geometry: 'barrel', material: 'pirate', position: [-2.8, 0, -0.9], rotation: [0, 0, 0], scale: [0.9, 0.9, 0.9] },
+    { geometry: 'barrel', material: 'pirate', position: [-2.3, 0, -0.75], rotation: [0, 0, 0], scale: [0.65, 0.65, 0.65] },
     { geometry: 'crate', material: 'kit', position: [-0.1, 0, -1.25], rotation: [0, 0.2, 0], scale: [0.4, 0.4, 0.4] },
-    // Rochas de poucas faces, apoiadas no chao e com tamanhos diferentes.
-    { geometry: 'rock', material: 'stone', position: [-1.65, 0.38, 2.05], rotation: [0, 0.3, 0], scale: [0.48, 0.38, 0.4] },
-    { geometry: 'rock', material: 'stoneLight', position: [-2.15, 0.22, 2.2], rotation: [0, 1.1, 0], scale: [0.3, 0.22, 0.28] },
-    { geometry: 'rock', material: 'stone', position: [-1.25, 0.17, 2.4], rotation: [0, -0.5, 0], scale: [0.25, 0.17, 0.23] },
+    { geometry: 'goldBag', material: 'pirate', position: [-1.9, 0.025, 1.1], rotation: [0, 0.4, 0], scale: [0.6, 0.6, 0.6] },
+    { geometry: 'coins', material: 'pirate', position: [-0.8, 0.001, 1.65], rotation: [0, 0, 0], scale: [0.8, 0.8, 0.8] },
+    { geometry: 'anchor', material: 'pirate', position: [3.7, 0.005, 1.3], rotation: [0, -0.5, 0], scale: [1.2, 1.2, 1.2] },
+    // Rochas TWGL preservadas para o requisito de primitivas.
+    { geometry: 'rock', material: 'stone', position: [-2.9, 0.38, 2.5], rotation: [0, 0.3, 0], scale: [0.48, 0.38, 0.4] },
+    { geometry: 'rock', material: 'stoneLight', position: [-3.4, 0.22, 2.65], rotation: [0, 1.1, 0], scale: [0.3, 0.22, 0.28] },
+    { geometry: 'rock', material: 'stone', position: [-2.5, 0.17, 2.85], rotation: [0, -0.5, 0], scale: [0.25, 0.17, 0.23] },
   ],
 };
 
 export async function createGeometries(gl) {
   const primitives = window.twgl.primitives;
   const models = {
-    boat: 'boat-row-large', tower: 'tower-base', towerDoor: 'tower-base-door',
-    towerTop: 'tower-top', palm: 'palm-bend', palmStraight: 'palm-straight',
-    chest: 'chest', barrel: 'barrel', crate: 'crate',
-    dock: 'structure-platform-dock-small', cannon: 'cannon',
+    palm: 'palm-bend', palmStraight: 'palm-straight', crate: 'crate', cannon: 'cannon',
+    ship: 'quaternius/Ship_Large', captain: 'quaternius/Characters_Captain_Barbarossa',
+    house: 'quaternius/Environment_House1', dock: 'quaternius/Environment_Dock',
+    chest: 'quaternius/Prop_Chest_Gold', barrel: 'quaternius/Prop_Barrel',
+    anchor: 'quaternius/Prop_Anchor', goldBag: 'quaternius/Prop_GoldBag', coins: 'quaternius/Prop_Coins',
   };
   // Mapeia X/Z em UV para evitar distorcer a areia no centro do disco.
-  const ground = primitives.createDiscVertices(4, 32);
+  const ground = primitives.createDiscVertices(scene.islandRadius, 48);
   for (let i = 0; i < ground.position.length / 3; i++) {
-    ground.texcoord[i * 2] = ground.position[i * 3] / 8 + 0.5;
-    ground.texcoord[i * 2 + 1] = ground.position[i * 3 + 2] / 8 + 0.5;
+    ground.texcoord[i * 2] = ground.position[i * 3] / (scene.islandRadius * 2) + 0.5;
+    ground.texcoord[i * 2 + 1] = ground.position[i * 3 + 2] / (scene.islandRadius * 2) + 0.5;
   }
   const imported = {};
   await Promise.all(Object.entries(models).map(async ([name, file]) => {
@@ -57,9 +68,12 @@ export async function createGeometries(gl) {
   }));
   return {
     ...imported,
+    water: primitives.createDiscBufferInfo(gl, scene.seaRadius, 64),
     ground: window.twgl.createBufferInfoFromArrays(gl, ground),
     // Latitude de PI/2 a PI: apenas a metade abaixo de Y = 0.
-    base: primitives.createSphereBufferInfo(gl, 4, 32, 16, Math.PI / 2, Math.PI),
+    base: primitives.createSphereBufferInfo(gl, scene.seaRadius, 64, 24, Math.PI / 2, Math.PI),
+    // Fecha a pequena altura entre a areia e a superficie do mar.
+    islandEdge: primitives.createCylinderBufferInfo(gl, scene.islandRadius, 0.2, 48, 1, false, false),
     rock: primitives.createSphereBufferInfo(gl, 1, 7, 4),
     dust: primitives.createSphereBufferInfo(gl, 1, 5, 3),
     cube: primitives.createCubeBufferInfo(gl, 1),
@@ -87,6 +101,14 @@ export function addObject(config, parent = null) {
 export function updateScene(deltaTime) {
   updateWind(scene, deltaTime);
   function updateObject(object) {
+    if (object.orbit) {
+      const orbit = object.orbit;
+      orbit.angle = (orbit.angle + orbit.speed * deltaTime) % (Math.PI * 2);
+      object.position[0] = Math.cos(orbit.angle) * orbit.radius;
+      object.position[2] = Math.sin(orbit.angle) * orbit.radius;
+      // A proa do modelo aponta para -X; acompanha a tangente da volta.
+      object.rotation[1] = Math.PI / 2 - orbit.angle;
+    }
     if (object.spin) {
       for (let axis = 0; axis < 3; axis++) {
         object.rotation[axis] = (object.rotation[axis] + object.spin[axis] * deltaTime) % (Math.PI * 2);
@@ -99,7 +121,7 @@ export function updateScene(deltaTime) {
 
 // Bateria costeira: pedestal fixo e canhao girando no eixo Y.
 addObject({
-  position: [1.85, 0, -1.65],
+  position: [2.3, 0, -2.3],
   children: [
     { geometry: 'cylinder', material: 'stone', position: [0, 0.15, 0], scale: [0.95, 0.25, 0.95] },
     {
@@ -112,4 +134,23 @@ addObject({
   ],
 });
 
+// Tres locais livres sobre a ilha; P muda apenas posicao e orientacao.
+export const characterPoses = [
+  { position: [0.3, 0.006, 1.1], rotation: [0, 0, 0] },
+  { position: [3.1, 0.006, 0.2], rotation: [0, Math.PI / 2, 0] },
+  { position: [1.3, 0.006, -0.3], rotation: [0, -Math.PI / 3, 0] },
+];
+scene.characterPose = 0;
+export const captain = addObject({ geometry: 'captain', material: 'pirate', scale: [0.9, 0.9, 0.9] });
+
+function applyCharacterPose() {
+  const pose = characterPoses[scene.characterPose];
+  captain.position = [...pose.position];
+  captain.rotation = [...pose.rotation];
+}
+export function nextCharacterPose() {
+  scene.characterPose = (scene.characterPose + 1) % characterPoses.length;
+  applyCharacterPose();
+}
+applyCharacterPose();
 setupWind(scene, addObject);
