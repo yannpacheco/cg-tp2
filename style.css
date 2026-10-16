@@ -64,3 +64,31 @@ button:disabled {
   margin-bottom: 0;
 }
 
+/* No celular, os controles ficam embaixo sem cobrir toda a cena. */
+@media (max-width: 768px), (pointer: coarse) and (max-height: 500px) {
+  #menu {
+    position: fixed;
+    top: auto;
+    bottom: max(12px, env(safe-area-inset-bottom));
+    left: max(12px, env(safe-area-inset-left));
+    right: max(12px, env(safe-area-inset-right));
+    max-width: none;
+    max-height: 40vh;
+    max-height: 40dvh;
+    padding: 12px;
+  }
+
+  #menu h1 {
+    font-size: 18px;
+    margin-bottom: 8px;
+  }
+
+  #menu p {
+    margin: 6px 0;
+  }
+
+  #menu button {
+    min-height: 44px;
+  }
+}
+
