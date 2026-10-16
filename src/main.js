@@ -21,7 +21,13 @@ if (!gl) {
   if (!programInfo) {
     status.textContent = 'Erro ao compilar os shaders. Confira o console.';
   } else {
-    geometries = createGeometries(gl);
+    try {
+      status.textContent = 'Carregando modelos...';
+      geometries = await createGeometries(gl);
+    } catch (error) {
+      status.textContent = error.message;
+      throw error;
+    }
     gl.enable(gl.DEPTH_TEST);
     setupCameraControls(canvas);
     lightButton.disabled = false;
@@ -56,7 +62,7 @@ function update(deltaTime) {
   if (cameraStatus.textContent !== cameraText) cameraStatus.textContent = cameraText;
   // Atualiza o menu apenas quando o estado muda.
   const pressed = String(scene.lightingEnabled);
-  if (lightButton.getAttribute('aria-pressed') !== pressed || status.textContent === 'Carregando WebGL...') {
+  if (lightButton.getAttribute('aria-pressed') !== pressed || status.textContent === 'Carregando modelos...') {
     lightButton.setAttribute('aria-pressed', pressed);
     lightButton.textContent = scene.lightingEnabled ? 'Desligar iluminação' : 'Ligar iluminação';
     status.textContent = 'Iluminação ' + (scene.lightingEnabled ? 'ligada' : 'desligada') + '.';
@@ -107,3 +113,4 @@ function drawObject(object, parentWorld, viewProjection) {
     drawObject(child, world, viewProjection);
   }
 }
+

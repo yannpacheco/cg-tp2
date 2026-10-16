@@ -1,14 +1,11 @@
-﻿# TP2 - Diorama
+﻿# TP2 - Ilha do Contrabando
 
-HTML, CSS, JavaScript e TWGL.js (requer internet).
+Ilha pirata low-poly com fortim e barco. [Plano visual](docs/tema.md).
+HTML/CSS/JS + TWGL.js (internet).
 
 Execute `python -m http.server 8000` e abra http://localhost:8000.
+Controles: 1 = câmera automática + scroll; 2 = arrastar para orbitar; L = luz.
 
-Base circular, hemisfério e três primitivas de teste, com luz direcional. Tecla L: ligar/desligar iluminação.
-Centro: (0, 0, 0). Chão: Y = 0. Y aponta para cima. Escala: 1 unidade.
-
-Edite posição, rotação (radianos), escala e material em `src/scene.js`.
-Remova as três linhas de teste para deixar apenas a base.
-
-Câmeras: 1 = giro automático + scroll; 2 = orbital ao arrastar o mouse.
-Teste de hierarquia: haste fixa e hélice giratória. Use addObject(config) em src/scene.js para adicionar objetos; children define partes filhas.
+Chão Y = 0; centro (0,0,0); Y para cima; 1 unidade de referência.
+Cena e materiais: src/scene.js. Haste/hélice mantida como teste.
+Modelos: Kenney; [créditos e situação da licença](assets/README.md). Textura ausente: cores simples.
