@@ -1,4 +1,4 @@
-﻿// Panorama em uma esfera centrada na camera, sem receber luz da cena.
+// Panorama em uma esfera centrada na camera, sem receber luz da cena.
 export async function createSky(gl) {
   const twgl = window.twgl;
   const programInfo = twgl.createProgramInfo(gl, [`
@@ -13,10 +13,13 @@ export async function createSky(gl) {
   `, `
     precision mediump float;
     uniform sampler2D u_sky;
+    uniform float u_night;
     varying vec2 v_texcoord;
     void main() {
       // Usa a metade do ceu; a foto inferior tem molhes de pedra.
-      gl_FragColor = texture2D(u_sky, vec2(v_texcoord.x, v_texcoord.y * 0.5));
+      vec3 color = texture2D(u_sky, vec2(v_texcoord.x, v_texcoord.y * 0.5)).rgb;
+      color *= mix(vec3(1.0), vec3(0.07, 0.12, 0.25), u_night);
+      gl_FragColor = vec4(color, 1.0);
     }
   `]);
   if (!programInfo) throw new Error('Erro ao preparar o panorama.');
@@ -32,7 +35,7 @@ export async function createSky(gl) {
   return { programInfo, texture, geometry };
 }
 
-export function drawSky(gl, sky, viewProjection, cameraPosition) {
+export function drawSky(gl, sky, viewProjection, cameraPosition, night) {
   const twgl = window.twgl;
   const world = twgl.m4.translation(cameraPosition);
   // O fundo nao grava profundidade, para os objetos aparecerem na frente.
@@ -43,6 +46,7 @@ export function drawSky(gl, sky, viewProjection, cameraPosition) {
   twgl.setUniforms(sky.programInfo, {
     u_matrix: twgl.m4.multiply(viewProjection, world),
     u_sky: sky.texture,
+    u_night: night,
   });
   twgl.drawBufferInfo(gl, sky.geometry);
   gl.depthMask(true);

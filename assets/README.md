@@ -27,3 +27,9 @@ Fundo: EveningSkyHDRI021A_2K_TONEMAPPED.jpg fornecida pelo integrante, copiada
 para backgrounds/evening-sky.jpg. Usamos a metade superior (céu) em esfera
 centrada na câmera para excluir os molhes da fotografia. Não carrega EXR nem
 altera a iluminação dos objetos. Fonte/licença específica a registrar.
+
+Gaivotas: Flying seagull, Poly by Google (CC BY), e som Seagull Ambient 1,
+publicado por Rango Mango no OpenGameArt (CC0). [Créditos e fontes](CREDITS-Seagulls.md).
+
+Ambiente de praia: Sea Waves (0698), Joseph SARDIN / BigSoundBank, CC0.
+MP3 local em audio/beach.mp3. [Fonte e licença](CREDITS-Beach.md).

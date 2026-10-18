@@ -1,16 +1,24 @@
+import { getWaterOffset } from './water.js';
+import { setupSeagulls, updateSeagulls } from './seagulls.js';
+import { createSandVertices, getSandHeight } from './terrain.js';
 import { setupWind, updateWind } from './wind.js';
 import { loadOBJ } from './obj-loader.js';
 
 export const scene = {
+  time: 0,
+  waveIntensity: 1,
   islandRadius: 5.5,
   seaRadius: 8.5,
   backgroundColor: [0.65, 0.8, 0.9, 1],
   lightingEnabled: true,
+  night: false,
+  nightAmount: 0,
   // Direção da superfície para a luz, em coordenadas da cena.
   light: { direction: [1, 2, 3], ambient: 0.25 },
   materials: {
     pirate: { color: [1, 1, 1, 1], textured: true, texture: 'pirate' },
-    water: { color: [0.16, 0.57, 0.72, 1], ambient: 0.7 },
+    water: { color: [0.16, 0.57, 0.72, 1], ambient: 0.7, water: true },
+    oceanBase: { color: [0.08, 0.4, 0.53, 1], ambient: 0.7 },
     kit: { color: [1, 1, 1, 1], textured: true },
     ground: { color: [1, 1, 1, 1], textured: true, texture: 'sand', textureScale: [4, 4], tint: [1, 0.9, 0.68], tintStrength: 0.65, ambient: 0.65 },
     base: { color: [0.5, 0.35, 0.2, 1] },
@@ -25,7 +33,7 @@ export const scene = {
     { geometry: 'water', material: 'water', position: [0, -0.2, 0], rotation: [0, 0, 0], scale: [1, 1, 1] },
     { geometry: 'ground', material: 'ground', position: [0, 0, 0], rotation: [0, 0, 0], scale: [1, 1, 1] },
     // O hemisferio acompanha a borda do mar, formando uma base unica.
-    { geometry: 'base', material: 'water', position: [0, -0.2, 0], rotation: [0, 0, 0], scale: [1, 0.85, 1] },
+    { geometry: 'base', material: 'oceanBase', position: [0, -0.2, 0], rotation: [0, 0, 0], scale: [1, 0.85, 1] },
     { geometry: 'islandEdge', material: 'base', position: [0, -0.1, 0], rotation: [0, 0, 0], scale: [1, 1, 1] },
     // Casa e tesouro a esquerda; o porto ocupa a borda direita.
     { geometry: 'house', material: 'pirate', position: [-1.2, 0.014, -2.2], rotation: [0, 0, 0], scale: [0.38, 0.38, 0.38] },
@@ -50,25 +58,21 @@ export const scene = {
 export async function createGeometries(gl) {
   const primitives = window.twgl.primitives;
   const models = {
+    seagull: 'seagull/Flying gull Texture 2',
     palm: 'palm-bend', palmStraight: 'palm-straight', crate: 'crate', cannon: 'cannon',
     ship: 'quaternius/Ship_Large', captain: 'quaternius/Characters_Captain_Barbarossa',
     house: 'quaternius/Environment_House1', dock: 'quaternius/Environment_Dock',
     chest: 'quaternius/Prop_Chest_Gold', barrel: 'quaternius/Prop_Barrel',
     anchor: 'quaternius/Prop_Anchor', goldBag: 'quaternius/Prop_GoldBag', coins: 'quaternius/Prop_Coins',
   };
-  // Mapeia X/Z em UV para evitar distorcer a areia no centro do disco.
-  const ground = primitives.createDiscVertices(scene.islandRadius, 48);
-  for (let i = 0; i < ground.position.length / 3; i++) {
-    ground.texcoord[i * 2] = ground.position[i * 3] / (scene.islandRadius * 2) + 0.5;
-    ground.texcoord[i * 2 + 1] = ground.position[i * 3 + 2] / (scene.islandRadius * 2) + 0.5;
-  }
+  const ground = createSandVertices(window.twgl, scene.islandRadius);
   const imported = {};
   await Promise.all(Object.entries(models).map(async ([name, file]) => {
-    imported[name] = await loadOBJ(gl, file + '.obj');
+    imported[name] = await loadOBJ(gl, file + '.obj', name === 'seagull' ? 1.2 : null);
   }));
   return {
     ...imported,
-    water: primitives.createDiscBufferInfo(gl, scene.seaRadius, 64),
+    water: primitives.createDiscBufferInfo(gl, scene.seaRadius, 128, 56),
     ground: window.twgl.createBufferInfoFromArrays(gl, ground),
     // Latitude de PI/2 a PI: apenas a metade abaixo de Y = 0.
     base: primitives.createSphereBufferInfo(gl, scene.seaRadius, 64, 24, Math.PI / 2, Math.PI),
@@ -99,7 +103,9 @@ export function addObject(config, parent = null) {
 }
 
 export function updateScene(deltaTime) {
+  scene.time += deltaTime;
   updateWind(scene, deltaTime);
+  updateSeagulls(scene, deltaTime);
   function updateObject(object) {
     if (object.orbit) {
       const orbit = object.orbit;
@@ -108,6 +114,9 @@ export function updateScene(deltaTime) {
       object.position[2] = Math.sin(orbit.angle) * orbit.radius;
       // A proa do modelo aponta para -X; acompanha a tangente da volta.
       object.rotation[1] = Math.PI / 2 - orbit.angle;
+      object.position[1] = 0.2 + getWaterOffset(object.position[0], object.position[2], scene.time, scene.seaRadius, scene.waveIntensity, scene.islandRadius);
+      object.rotation[0] = Math.sin(scene.time * 1.1) * 0.015 * Math.min(scene.waveIntensity, 8);
+      object.rotation[2] = Math.sin(scene.time * 0.9) * 0.02 * Math.min(scene.waveIntensity, 8);
     }
     if (object.spin) {
       for (let axis = 0; axis < 3; axis++) {
@@ -146,11 +155,20 @@ export const captain = addObject({ geometry: 'captain', material: 'pirate', scal
 function applyCharacterPose() {
   const pose = characterPoses[scene.characterPose];
   captain.position = [...pose.position];
+  captain.position[1] += getSandHeight(pose.position[0], pose.position[2]);
   captain.rotation = [...pose.rotation];
 }
 export function nextCharacterPose() {
   scene.characterPose = (scene.characterPose + 1) % characterPoses.length;
   applyCharacterPose();
 }
+// Apoia os objetos existentes na nova altura da areia.
+for (const object of scene.objects) {
+  if (object === captain || ['water', 'ground', 'base', 'islandEdge', 'ship'].includes(object.geometry)) continue;
+  const [x, , z] = object.position;
+  object.position[1] += getSandHeight(x, z);
+}
 applyCharacterPose();
 setupWind(scene, addObject);
+
+setupSeagulls(scene, addObject);

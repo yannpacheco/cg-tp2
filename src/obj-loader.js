@@ -30,10 +30,27 @@ export function parseOBJ(text) {
   return { texcoord: { numComponents: 2, data: texcoord }, position: { numComponents: 3, data: position }, normal: { numComponents: 3, data: normal } };
 }
 
-export async function loadOBJ(gl, filename) {
+export async function loadOBJ(gl, filename, size = null) {
   const response = await fetch(new URL('../assets/models/' + filename, import.meta.url));
   if (!response.ok) throw new Error('Não foi possível carregar ' + filename);
-  return window.twgl.createBufferInfoFromArrays(gl, parseOBJ(await response.text()));
+  const arrays = parseOBJ(await response.text());
+  if (size !== null) {
+    // Centraliza modelos de outra escala antes de coloca-los na cena.
+    const data = arrays.position.data;
+    const min = [Infinity, Infinity, Infinity];
+    const max = [-Infinity, -Infinity, -Infinity];
+    for (let i = 0; i < data.length; i++) {
+      const axis = i % 3;
+      min[axis] = Math.min(min[axis], data[i]);
+      max[axis] = Math.max(max[axis], data[i]);
+    }
+    const scale = size / Math.max(...max.map((value, axis) => value - min[axis]));
+    for (let i = 0; i < data.length; i++) {
+      const axis = i % 3;
+      data[i] = (data[i] - (min[axis] + max[axis]) / 2) * scale;
+    }
+  }
+  return window.twgl.createBufferInfoFromArrays(gl, arrays);
 }
 
 // Uma imagem de paleta atende a todos os modelos do kit.

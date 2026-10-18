@@ -9,25 +9,60 @@
 <body>
   <canvas id="canvas" width="800" height="500" aria-label="Cena do diorama"></canvas>
 
-  <!-- Menu sobre a cena, sem alterar o tamanho do canvas. -->
+  <!-- Painel sobre a cena; no celular fica recolhido embaixo. -->
   <aside id="menu" aria-label="Controles do diorama">
-    <h1>Ilha do Contrabando</h1>
-    <p><kbd>1</kbd> Giro automático · scroll para zoom</p>
-    <p><kbd>2</kbd> Orbital · arraste o mouse para girar</p>
-    <p id="camera-status" role="status">Câmera 1: giro automático</p>
-    <p><kbd>L</kbd> Ligar/desligar iluminação</p>
-    <button id="toggle-light" type="button" aria-pressed="true" disabled>Desligar iluminação</button>
-    <p><kbd>V</kbd> Vento nas palmeiras e poeira</p>
-    <button id="toggle-wind" type="button" aria-pressed="true" disabled>Carregando vento...</button>
-    <p><kbd>P</kbd> Trocar posição do capitão</p>
-    <button id="next-pose" type="button" disabled>Carregando capitão...</button>
-    <p id="status" role="status">Carregando WebGL...</p>
+    <header class="panel-header">
+      <span class="compass" aria-hidden="true">✦</span>
+      <div><p class="eyebrow">DIORAMA · EXPEDIÇÃO PIRATA</p><h1>Ilha do Contrabando</h1></div>
+    </header>
+    <details id="control-panel" open>
+      <summary>Seu painel de bordo <span class="panel-indicator" aria-hidden="true"></span></summary>
+      <div class="panel-body">
+        <section class="control-section" aria-label="Câmeras">
+          <h2>01 <span>Explore a ilha</span></h2>
+          <div class="button-grid">
+            <button id="camera-auto" type="button" aria-pressed="true"><kbd>1</kbd> Automática</button>
+            <button id="camera-orbit" type="button" aria-pressed="false"><kbd>2</kbd> Orbital</button>
+          </div>
+          <p id="camera-status" class="hint" role="status">Use o scroll para aproximar ou afastar.</p>
+        </section>
+
+        <section class="control-section" aria-label="Som ambiente">
+          <h2>02 <span>O som da praia</span><kbd>S</kbd></h2>
+          <button id="toggle-sound" class="sound-button" type="button" aria-pressed="false" disabled>Ativar som</button>
+          <p id="sound-status" class="hint" role="status">Toque na cena para ouvir a praia</p>
+        </section>
+
+        <section class="control-section" aria-label="Ambiente">
+          <h2>03 <span>O tempo na ilha</span></h2>
+          <button id="toggle-day" class="sound-button" type="button" aria-pressed="false" disabled>Dia : Noite (mudar para noite)</button>
+          <div class="button-grid switches" style="margin-top: 7px">
+            <button id="toggle-light" type="button" aria-pressed="true" disabled>Luz ligada · L</button>
+            <button id="toggle-wind" type="button" aria-pressed="true" disabled>Vento ligado · V</button>
+          </div>
+          <fieldset id="effect-controls" disabled>
+            <legend class="sr-only">Intensidade dos efeitos</legend>
+            <label for="wave-intensity">Força das ondas <output id="wave-intensity-value" for="wave-intensity">1.0x</output></label>
+            <input id="wave-intensity" type="range" min="0" max="5" step="0.1" value="1">
+            <label for="wind-intensity">Intensidade do vento <output id="wind-intensity-value" for="wind-intensity">1.0x</output></label>
+            <input id="wind-intensity" type="range" min="0" max="4" step="0.1" value="1">
+            <label for="dust-intensity">Poeira na areia <output id="dust-intensity-value" for="dust-intensity">1.0x</output></label>
+            <input id="dust-intensity" type="range" min="0" max="3" step="0.1" value="1">
+          </fieldset>
+        </section>
+
+        <section class="control-section" aria-label="Ações">
+          <h2>04 <span>Pequenas aventuras</span></h2>
+          <div class="action-row"><kbd>P</kbd><button id="next-pose" type="button" disabled>Capitão · 1/3</button></div>
+          <div class="action-row"><kbd>G</kbd><button id="fly-seagulls" type="button" disabled>Chamar gaivotas</button></div>
+          <p id="seagull-status" class="hint" role="status">Carregando gaivotas...</p>
+        </section>
+        <p id="status" class="panel-footer" role="status">Carregando WebGL...</p>
+      </div>
+    </details>
   </aside>
 
-  <!-- TWGL auxilia as chamadas do WebGL. -->
   <script src="https://twgljs.org/dist/7.x/twgl-full.min.js"></script>
   <script type="module" src="src/main.js"></script>
 </body>
 </html>
-
-

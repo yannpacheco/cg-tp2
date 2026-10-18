@@ -21,3 +21,14 @@ export async function loadPirateAtlas(gl) {
     wrap: gl.CLAMP_TO_EDGE,
   });
 }
+
+export async function loadSeagullTexture(gl) {
+  const image = new Image();
+  image.src = new URL('../assets/models/seagull/Gull tex2.png', import.meta.url).href;
+  await image.decode();
+  return window.twgl.createTexture(gl, {
+    src: image, flipY: true,
+    min: gl.LINEAR_MIPMAP_LINEAR, mag: gl.LINEAR,
+    wrap: gl.CLAMP_TO_EDGE,
+  });
+}
