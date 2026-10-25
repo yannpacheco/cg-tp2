@@ -47,11 +47,13 @@ A implementação utiliza transformações locais e multiplicação de matrizes 
 
 ### 1.4. Câmeras
 
-Foram implementados dois modos de visualização, ambos utilizando projeção perspectiva.
+Foram implementados três modos de visualização, todos utilizando projeção perspectiva.
 
 **Câmera 1 — Automática:** posicionada acima do cenário, gira continuamente ao redor do centro do diorama. O scroll do mouse permite ajustar a distância da câmera.
 
 **Câmera 2 — Orbital:** permite que o usuário altere os ângulos de visualização com o movimento do mouse, mantendo o centro da cena como referência.
+
+**Câmera 3 — Livre:** permite navegar pela cena com `W`, `A`, `S` e `D`. Arraste o mouse sobre a cena para olhar em qualquer direção.
 
 ### 1.5. Iluminação
 
@@ -63,17 +65,19 @@ O projeto também implementa sombras dinâmicas por meio de *shadow mapping*, ut
 
 ### 1.6. Interações e controles
 
-| Tecla          | Funcionalidade                                  |
-| -------------- | ----------------------------------------------- |
-| `1`          | Ativar câmera automática                      |
-| `2`          | Ativar câmera orbital                          |
-| `P`          | Alternar posições e orientações do capitão |
-| `L`          | Ligar/desligar iluminação                     |
-| `V`          | Ligar/desligar vento e poeira                   |
-| `G`          | Iniciar passagem das gaivotas                   |
-| `S`          | Ligar/desligar áudio                           |
-| `N`          | Alternar entre dia e noite                      |
-| Scroll         | Ajustar distância da câmera automática       |
-| Arrastar mouse | Rotacionar câmera orbital                      |
+| Tecla              | Funcionalidade                                  |
+| ------------------ | ----------------------------------------------- |
+| `1`                | Ativar câmera automática                        |
+| `2`                | Ativar câmera orbital                           |
+| `3`                | Ativar câmera de navegação livre                |
+| `W`, `A`, `S`, `D` | Mover a câmera livre                            |
+| `P`                | Alternar posições e orientações do capitão      |
+| `L`                | Ligar/desligar iluminação                       |
+| `V`                | Ligar/desligar vento e poeira                   |
+| `G`                | Iniciar passagem das gaivotas                   |
+| `S`                | Ligar/desligar áudio (exceto no modo livre)     |
+| `N`                | Alternar entre dia e noite                      |
+| Scroll             | Ajustar distância da câmera automática          |
+| Arrastar mouse     | Rotacionar câmera orbital ou olhar ao redor no modo livre |
 
 O menu também disponibiliza controles para modificar a intensidade das ondas, do vento e das partículas de poeira.

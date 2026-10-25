@@ -73,6 +73,7 @@ if (!gl) {
     });
     document.querySelector('#camera-auto').addEventListener('click', () => { camera.mode = 1; });
     document.querySelector('#camera-orbit').addEventListener('click', () => { camera.mode = 2; });
+    document.querySelector('#camera-free').addEventListener('click', () => { camera.mode = 3; });
     seagullButton.disabled = false;
     seagullButton.addEventListener('click', () => startSeagulls(scene));
     document.addEventListener('visibilitychange', () => {
@@ -91,7 +92,7 @@ if (!gl) {
     window.addEventListener('keydown', (event) => {
       // Ignora repetição ao segurar a tecla.
       const key = event.key.toLowerCase();
-      if (!event.repeat && key === 's') toggleSound(scene);
+      if (!event.repeat && key === 's' && camera.mode !== 3) toggleSound(scene);
       else if (!event.repeat && ['1', '2', 'g', 'p', 'v', 'l', 'n'].includes(key)) unlockSound(scene);
       if (key === 'n' && !event.repeat) toggleDay();
       if (event.key.toLowerCase() === 'g' && !event.repeat) startSeagulls(scene);
@@ -184,7 +185,7 @@ function update(deltaTime) {
   soundButton.setAttribute('aria-pressed', String(scene.sound.enabled));
   const soundHint = scene.sound.error ? 'Áudio indisponível. Tente ativar novamente.' : scene.sound.enabled ? 'Praia e gaivotas com som' : scene.sound.started ? 'Todos os sons silenciados' : 'Toque na cena para ouvir a praia';
   if (soundStatus.textContent !== soundHint) soundStatus.textContent = soundHint;
-  for (const [id, mode] of [['camera-auto', 1], ['camera-orbit', 2]]) {
+  for (const [id, mode] of [['camera-auto', 1], ['camera-orbit', 2], ['camera-free', 3]]) {
     document.querySelector('#' + id).setAttribute('aria-pressed', String(camera.mode === mode));
   }
   seagullButton.disabled = scene.seagulls.active;
@@ -197,7 +198,11 @@ function update(deltaTime) {
     windButton.setAttribute('aria-pressed', windPressed);
     windButton.textContent = scene.wind.enabled ? 'Vento ligado ? V' : 'Vento desligado ? V';
   }
-  const cameraText = camera.mode === 1 ? 'Use o scroll para aproximar ou afastar.' : 'Arraste a cena para explorar a ilha.';
+  const cameraText = camera.mode === 1
+    ? 'Use o scroll para aproximar ou afastar.'
+    : camera.mode === 2
+      ? 'Arraste a cena para explorar a ilha.'
+      : 'WASD move a câmera; arraste a cena para olhar ao redor.';
   if (cameraStatus.textContent !== cameraText) cameraStatus.textContent = cameraText;
   // Atualiza o menu apenas quando o estado muda.
   const pressed = String(scene.lightingEnabled);
