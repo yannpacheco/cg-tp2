@@ -1,11 +1,11 @@
 import { createShadows, getLightMatrix } from './shadows.js';
-import { setupSound, syncSound, toggleSound, unlockSound } from './sound.js';
+import { setupSound, syncSound, toggleSound, unlockSound, playPirateGrunt } from './sound.js';
 import { waterVertexShader, waterFragmentShader } from './water.js';
 import { setupSeagullAudio, startSeagulls, stopSeagulls } from './seagulls.js';
 import { createSky, drawSky } from './sky.js';
 import { loadSand, loadPirateAtlas, loadSeagullTexture } from './textures.js';
 import { loadPalette } from './obj-loader.js';
-import { scene, createGeometries, updateScene, nextCharacterPose } from './scene.js';
+import { scene, captain, createGeometries, updateScene, nextCharacterPose } from './scene.js';
 import { camera, getCameraPosition, getViewProjection, setupCameraControls, updateCamera } from './camera.js';
 import { vertexShader, fragmentShader } from './shaders/basic.js';
 
@@ -63,6 +63,9 @@ if (!gl) {
     setupEffectControls();
     setupSeagullAudio(scene);
     setupSound(scene);
+    canvas.addEventListener('click', event => {
+      if (isCaptainClicked(event)) playPirateGrunt(scene);
+    });
     soundButton.disabled = false;
     soundButton.addEventListener('click', () => toggleSound(scene));
     document.addEventListener('pointerdown', event => {
@@ -121,6 +124,27 @@ function setupEffectControls() {
     input.addEventListener('input', change);
     change();
   }
+}
+
+function isCaptainClicked(event) {
+  const rect = canvas.getBoundingClientRect();
+  if (event.clientX < rect.left || event.clientX > rect.right || event.clientY < rect.top || event.clientY > rect.bottom) return false;
+
+  const x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
+  const y = 1 - ((event.clientY - rect.top) / rect.height) * 2;
+  const inverseViewProjection = twgl.m4.inverse(getViewProjection(gl));
+  const nearPoint = twgl.m4.transformPoint(inverseViewProjection, [x, y, -1]);
+  const origin = getCameraPosition();
+  const direction = nearPoint.map((value, axis) => value - origin[axis]);
+  const length = Math.hypot(...direction);
+  for (let axis = 0; axis < direction.length; axis++) direction[axis] /= length;
+
+  const center = [captain.position[0], captain.position[1] + 0.85, captain.position[2]];
+  const offset = origin.map((value, axis) => value - center[axis]);
+  const projection = offset.reduce((sum, value, axis) => sum + value * direction[axis], 0);
+  const radius = 1;
+  const discriminant = projection * projection - (offset.reduce((sum, value) => sum + value * value, 0) - radius * radius);
+  return discriminant >= 0 && -projection + Math.sqrt(discriminant) >= 0;
 }
 
 function toggleDay() {
@@ -263,4 +287,3 @@ function drawObject(object, parentWorld, viewProjection, shadowPass = false) {
     drawObject(child, world, viewProjection, shadowPass);
   }
 }
-

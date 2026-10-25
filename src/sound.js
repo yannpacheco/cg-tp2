@@ -1,12 +1,21 @@
 // Controle unico para o mar de fundo e os efeitos das gaivotas.
 export function setupSound(scene) {
   const ambient = new Audio(new URL('../assets/audio/beach.mp3', import.meta.url).href);
+  const grunt = new Audio(new URL('../assets/audio/grunt.mp3', import.meta.url).href);
   ambient.loop = true;
   ambient.preload = 'auto';
   ambient.volume = 0.05;
-  scene.sound = { enabled: false, started: false, error: false, ambient };
+  grunt.preload = 'auto';
+  scene.sound = { enabled: false, started: false, error: false, ambient, grunt };
   ambient.addEventListener('error', () => { scene.sound.error = true; });
   scene.seagulls.audio.muted = true;
+}
+
+export function playPirateGrunt(scene) {
+  scene.sound.grunt.currentTime = 0;
+  scene.sound.grunt.play().catch(error => {
+    if (error.name !== 'AbortError') console.error('Não foi possível reproduzir o grunhido do pirata.', error);
+  });
 }
 
 export function syncSound(scene) {
