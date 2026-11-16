@@ -183,7 +183,7 @@ function update(deltaTime) {
   const soundText = scene.sound.enabled ? 'Desligar som' : 'Ativar som';
   if (soundButton.textContent !== soundText) soundButton.textContent = soundText;
   soundButton.setAttribute('aria-pressed', String(scene.sound.enabled));
-  const soundHint = scene.sound.error ? 'Áudio indisponível. Tente ativar novamente.' : scene.sound.enabled ? 'Praia e gaivotas com som' : scene.sound.started ? 'Todos os sons silenciados' : 'Toque na cena para ouvir a praia';
+  const soundHint = scene.sound.error ? 'Áudio indisponível. Tente ativar novamente.' : scene.sound.enabled ? 'Música, praia e gaivotas com som' : scene.sound.started ? 'Todos os sons silenciados' : 'Toque na cena para ouvir a música e a praia';
   if (soundStatus.textContent !== soundHint) soundStatus.textContent = soundHint;
   for (const [id, mode] of [['camera-auto', 1], ['camera-orbit', 2], ['camera-free', 3]]) {
     document.querySelector('#' + id).setAttribute('aria-pressed', String(camera.mode === mode));

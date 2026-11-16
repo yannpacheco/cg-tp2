@@ -16,7 +16,7 @@ A cena representa uma pequena ilha cercada pelo oceano, com uma casa de madeira,
 
 O personagem principal é um capitão pirata, que pode ser visualizado em três posições e orientações diferentes. O cenário também contém um canhão montado sobre uma estrutura fixa, cuja parte superior gira continuamente por meio de transformações hierárquicas.
 
-O ambiente possui animações e efeitos visuais, como ondas no mar, movimentação de um navio, vento nas palmeiras, partículas de poeira, gaivotas em movimento, sons ambientais, sombras dinâmicas e alternância entre dia e noite.
+O ambiente possui animações e efeitos visuais, como ondas no mar, movimentação de um navio, vento nas palmeiras, partículas de poeira, gaivotas em movimento, música e sons ambientais, sombras dinâmicas e alternância entre dia e noite.
 
 ### 1.1. Estrutura do diorama
 
